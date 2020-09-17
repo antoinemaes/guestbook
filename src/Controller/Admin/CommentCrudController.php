@@ -2,12 +2,15 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Comment;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
+
+use App\Entity\Comment;
 
 
 class CommentCrudController extends AbstractCrudController
@@ -28,6 +31,16 @@ class CommentCrudController extends AbstractCrudController
             TextField::new('photoFilename'),
             AssociationField::new('conference')
         ];
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add('author')
+            ->add('email')
+            ->add('createdAt')
+            ->add('conference')
+        ;
     }
 
 }
