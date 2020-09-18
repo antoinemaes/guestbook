@@ -9,3 +9,8 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+
+/.buildpath
+/.project
+/.settings/
+
