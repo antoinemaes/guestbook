@@ -3,22 +3,32 @@
 {% block title %}Conference Guestbook - {{ conference }}{% endblock %}
 
 {% block body %}
-    <h2>{{ conference }} Conference</h2>
+    <h1>{{ conference }} Conference</h1>
 
     {% if comments|length > 0 %}
+
+        <p>There are {{ comments|length }} comments.</p>
+
         {% for comment in comments %}
             {% if comment.photofilename %}
                 <img src="{{ asset('uploads/photos/' ~ comment.photofilename) }}" />
             {% endif %}
 
-            <h4>{{ comment.author }}</h4>
+            <h2>{{ comment.author }}</h2>
             <small>
                 {{ comment.createdAt|format_datetime('medium', 'short') }}
             </small>
 
             <p>{{ comment.text }}</p>
         {% endfor %}
+
+        {% if previous >= 0 %}
+            <a href="{{ path('conference', {id: conference.id, offset: previous}) }}">Previous</a>
+        {% endif %}
+        {% if next < comments|length %}
+            <a href="{{ path('conference', {id: conference.id, offset: next}) }}">Next</a>
+        {% endif %}
     {% else %}
-        <div>No comments have been posted yet for this conference.</div>
+        <p>No comments have been posted yet for this conference.</p>
     {% endif %}
 {% endblock %}
