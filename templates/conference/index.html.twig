@@ -4,14 +4,14 @@
 
 {% block body %}
 
-    <h2>Give your feedback !</h2>
+    <h1>Give your feedback !</h1>
 
     {% for conference in conferences %}
         <div>
-            <h4>{{ conference }}</h4>
+            <h2>{{ conference }}</h2>
 
             <p>
-                <a href="{{ path('conference', { id : conference.id }) }}">View</a>
+                <a href="{{ path('conference', { slug : conference.slug }) }}">View</a>
             </p>
         </div>
     {% endfor %}
