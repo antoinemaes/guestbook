@@ -30,10 +30,7 @@ class ConferenceController extends AbstractController
         return new Response(
             $this->twig->render(
                 'conference/index.html.twig', 
-                ['conferences' => $confRep->findBy(
-                    [],
-                    ['year' => 'DESC'])
-                ]
+                ['conferences' => $confRep->findAll()]
             )
         );
     }
