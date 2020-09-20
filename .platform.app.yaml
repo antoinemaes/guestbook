@@ -1,45 +1,57 @@
+# This file describes an application. You can have multiple applications
+# in the same project.
+
 # The name of this app. Must be unique within a project.
 name: app
 
-# The runtime the application uses. The 'type' key defines the base container
-# image that will be used to run the application. There is a separate base
-# container image for each primary language for the application,
-# in multiple versions. Check the PHP documentation
-# (https://docs.platform.sh/languages/php.html#supported-versions)
-# to find the supported versions for the 'php' type.
-type: 'php:7.4'
+# The type of the application to build.
+type: php:7.4
+build:
+    flavor: composer
 
-# The following block defines a single writable directory, 'web/uploads'
-# The 'source' specifies where the writable mount is. The 'local' source
-# indicates that the mount point will point to a local directory on the
-# application container. The 'source_path' specifies the subdirectory
-# from within the source that the mount should point at. 
-mounts:
-  'web/uploads':
-    source: local
-    source_path: uploads
+variables:
+    env:
+        # Tell Symfony to always install in production-mode.
+        APP_ENV: 'prod'
+        APP_DEBUG: 0
 
-# The size of the persistent disk of the application (in MB).
-disk: 256
-
-# The relationships of the application with services or other applications.
-#
-# The left-hand side is the name of the relationship as it will be exposed
-# to the application in the PLATFORM_RELATIONSHIPS variable. The right-hand
-# side is in the form <service name>:<endpoint name>.
-relationships:
-    database: 'db:mysql'
-    redisdata: 'data:redis'
-
-
+# The hooks that will be performed when the package is deployed.
 hooks:
     build: |
-      set -e
+        set -e
+        bin/console assets:install --no-debug
+        bin/console cache:clear
     deploy: |
-      set -e
+        set -e
+        bin/console assets:install --symlink --relative public
+        bin/console cache:clear
+# The relationships of the application with services or other applications.
+# The left-hand side is the name of the relationship as it will be exposed
+# to the application in the PLATFORM_RELATIONSHIPS variable. The right-hand
+# side is in the form `<service name>:<endpoint name>`.
+relationships:
+    database: "db:mysql"
 
+# The size of the persistent disk of the application (in MB).
+disk: 2048
+
+# The mounts that will be performed when the package is deployed.
+mounts:
+    "/var/cache":
+        source: local
+        source_path: "cache"
+    "/var/log":
+        source: local
+        source_path: "log"
+    "/var/sessions":
+        source: local
+        source_path: "sessions"
+
+# The configuration of app when it is exposed to the web.
 web:
-  locations: 
-    '/': 
-      root: "\"web\""
-      passthru: "/index.php"
+    locations:
+        "/":
+            # The public directory of the app, relative to its root.
+            root: "public"
+            # The front-controller script to send non-static requests to.
+            passthru: "/index.php"
