@@ -60,10 +60,13 @@ class ConferenceController extends AbstractController
             if($photo = $form['photo']->getData()) {
                 $filename = bin2hex(random_bytes(6)).'.'.$photo->guessExtension();
                 try {
-                    $photosStorage->writeStream($filename, fopen($photo->getPathname(), 'rb'));
+                    $photosStorage->writeStream(
+                        $filename, 
+                        fopen($photo->getPathname(), 'rb'), 
+                        ['visibility' => 'public']);
                     $comment->setPhotoFilename($filename);
                 } catch (FileException $e) {
-                    
+
                 }
             }
 
