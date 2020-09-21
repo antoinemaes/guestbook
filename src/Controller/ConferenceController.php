@@ -59,7 +59,19 @@ class ConferenceController extends AbstractController
             if($photo = $form['photo']->getData()) {
                 $filename = bin2hex(random_bytes(6)).'.'.$photo->guessExtension();
                 try {
-                    $photo->move($photoDir, $filename);
+                    if($bucket = getenv('S3_BUCKET_NAME')) {
+                        $s3 = new Aws\S3\S3Client([
+                            'version'  => '2006-03-01',
+                            'region'   => 'eu-west-3',
+                        ]);
+                        $upload = $s3->upload(
+                            $bucket, 
+                            $filename, 
+                            $photo, 
+                            'public-read');
+                    } else {
+                        $photo->move($photoDir, $filename);
+                    }
                     $comment->setPhotoFilename($filename);
                 } catch (FileException $e) {
 
