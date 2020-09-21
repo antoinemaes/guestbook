@@ -67,10 +67,8 @@ class ConferenceController extends AbstractController
                         $upload = $s3->upload(
                             $bucket, 
                             $filename, 
-                            $photo, 
+                            fopen($photo->getPathname(), 'rb'), 
                             'public-read');
-                    } else {
-                        $photo->move($photoDir, $filename);
                     }
                     $comment->setPhotoFilename($filename);
                 } catch (FileException $e) {
