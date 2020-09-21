@@ -11,6 +11,8 @@
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.7",
         "easycorp/easyadmin-bundle": "^3.1",
+        "league/flysystem-aws-s3-v3": "^1.0",
+        "league/flysystem-bundle": "^1.5",
         "platformsh/symfonyflex-bridge": "^2.2",
         "predis/predis": "^1.1",
         "sensio/framework-extra-bundle": "^5.6",

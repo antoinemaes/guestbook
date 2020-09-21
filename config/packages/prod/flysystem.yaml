@@ -1,0 +1,7 @@
+flysystem:
+    storages:
+        photos.storage:
+            adapter: 'aws'
+            options:
+                client: Aws\S3\S3Client # The service ID of the Aws\S3\S3Client instance
+                bucket: '%env(S3_BUCKET_NAME)%'

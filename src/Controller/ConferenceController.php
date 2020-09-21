@@ -4,6 +4,7 @@ namespace App\Controller;
 
 
 use Doctrine\ORM\EntityManagerInterface;
+use League\Flysystem\FilesystemInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,7 +47,7 @@ class ConferenceController extends AbstractController
     /**
      * @Route("/conference/{slug}", name="conference")
      */
-    public function show(Request $request, Conference $conf, CommentRepository $commRep, string $photoDir) 
+    public function show(Request $request, Conference $conf, CommentRepository $commRep, FilesystemInterface $photosStorage) 
     {
 
         $comment = new Comment();
@@ -59,20 +60,10 @@ class ConferenceController extends AbstractController
             if($photo = $form['photo']->getData()) {
                 $filename = bin2hex(random_bytes(6)).'.'.$photo->guessExtension();
                 try {
-                    if($bucket = getenv('S3_BUCKET_NAME')) {
-                        $s3 = new \Aws\S3\S3Client([
-                            'version'  => '2006-03-01',
-                            'region'   => 'eu-west-3',
-                        ]);
-                        $upload = $s3->upload(
-                            $bucket, 
-                            $filename, 
-                            fopen($photo->getPathname(), 'rb'), 
-                            'public-read');
-                    }
+                    $photosStorage->writeStream($filename, fopen($photo->getPathname(), 'rb'));
                     $comment->setPhotoFilename($filename);
                 } catch (FileException $e) {
-
+                    
                 }
             }
 
