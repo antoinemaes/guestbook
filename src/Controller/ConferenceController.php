@@ -60,7 +60,7 @@ class ConferenceController extends AbstractController
                 $filename = bin2hex(random_bytes(6)).'.'.$photo->guessExtension();
                 try {
                     if($bucket = getenv('S3_BUCKET_NAME')) {
-                        $s3 = new Aws\S3\S3Client([
+                        $s3 = new \Aws\S3\S3Client([
                             'version'  => '2006-03-01',
                             'region'   => 'eu-west-3',
                         ]);
