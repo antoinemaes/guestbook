@@ -17,6 +17,7 @@ use App\Entity\Conference;
 use App\Form\CommentFormType;
 use App\Repository\CommentRepository;
 use App\Repository\ConferenceRepository;
+use App\SpamChecker;
 
 class ConferenceController extends AbstractController
 {
@@ -47,7 +48,7 @@ class ConferenceController extends AbstractController
     /**
      * @Route("/conference/{slug}", name="conference")
      */
-    public function show(Request $request, Conference $conf, CommentRepository $commRep, FilesystemInterface $photosStorage) 
+    public function show(Request $request, Conference $conf, CommentRepository $commRep, SpamChecker $spamChecker) 
     {
 
         $comment = new Comment();
@@ -57,6 +58,17 @@ class ConferenceController extends AbstractController
         if($form->isSubmitted() and $form->isValid()) {
             $comment->setConference($conf);
             $this->entityManager->persist($comment);
+
+            $context = [
+                'user_ip' => $request->getClientIp(),
+                'user_agent' => $request->headers->get('user-agent'),
+                'referrer' => $request->headers->get('referer'),
+                'permalink' => $request->getUri(),
+            ];
+            if (2 === $spamChecker->getSpamScore($comment, $context)) {
+                throw new \RuntimeException('Blatant spam, go away!');
+            }
+
             $this->entityManager->flush();
 
             return $this->redirectToRoute('conference', ['slug' => $conf->getSlug()]);
