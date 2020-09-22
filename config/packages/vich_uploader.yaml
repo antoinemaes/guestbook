@@ -1,0 +1,10 @@
+vich_uploader:
+    db_driver: orm
+    storage: flysystem
+
+    mappings:
+        photos:
+            uri_prefix: '%env(PHOTO_BASE)%'
+            upload_destination: photos.storage
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+

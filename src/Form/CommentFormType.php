@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Image;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class CommentFormType extends AbstractType
 {
@@ -19,13 +20,7 @@ class CommentFormType extends AbstractType
             ->add('author', null, ['label' => 'Your name'])
             ->add('text')
             ->add('email', EmailType::Class)
-            ->add('photo', FileType::Class, [
-                'required' => false,
-                'mapped' => false,
-                'constraints' => [
-                    new Image(['maxSize' => '1024k'])
-                ]
-            ])
+            ->add('photoFile', VichImageType::class, ['required' => false])
             ->add('submit', SubmitType::Class)
         ;
     }

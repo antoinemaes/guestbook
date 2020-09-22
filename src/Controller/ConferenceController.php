@@ -56,20 +56,6 @@ class ConferenceController extends AbstractController
         $form->handleRequest($request);
         if($form->isSubmitted() and $form->isValid()) {
             $comment->setConference($conf);
-
-            if($photo = $form['photo']->getData()) {
-                $filename = bin2hex(random_bytes(6)).'.'.$photo->guessExtension();
-                try {
-                    $photosStorage->writeStream(
-                        $filename, 
-                        fopen($photo->getPathname(), 'rb'), 
-                        ['visibility' => 'public']);
-                    $comment->setPhotoFilename($filename);
-                } catch (FileException $e) {
-
-                }
-            }
-
             $this->entityManager->persist($comment);
             $this->entityManager->flush();
 
