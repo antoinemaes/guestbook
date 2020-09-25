@@ -67,6 +67,11 @@ class Comment
      */
     private $updatedAt;
 
+    /**
+     * @ORM\Column(type="string", length=255, options={"default": "submitted"})
+     */
+    private $state = 'submitted';
+
     public function getId(): ?int
     {
         return $this->id;
@@ -201,6 +206,18 @@ class Comment
     public function setUpdatedAtValue()
     {
         $this->updatedAt = new \DateTime();
+    }
+
+    public function getState(): ?string
+    {
+        return $this->state;
+    }
+
+    public function setState(string $state): self
+    {
+        $this->state = $state;
+
+        return $this;
     }
 
 }

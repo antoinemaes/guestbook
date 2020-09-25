@@ -9,6 +9,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+
 
 use App\Entity\Comment;
 
@@ -29,7 +31,11 @@ class CommentCrudController extends AbstractCrudController
             TextField::new('email'),
             DateTimeField::new('createdAt')->hideOnForm(),
             ImageField::new('photoFilename')->setBasePath(getenv('PHOTO_BASE')),
-            AssociationField::new('conference')
+            AssociationField::new('conference'),
+            ChoiceField::new('state')->setChoices(
+                ['Submitted' => 'submitted', 
+                'Spam' => 'spam', 
+                'Published' => 'published'])
         ];
     }
 

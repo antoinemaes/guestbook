@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Services;
 
 use App\Entity\Comment;
 use Symfony\Contracts\HttpClient\HttpClientInterface;

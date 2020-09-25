@@ -17,18 +17,21 @@ use App\Entity\Conference;
 use App\Form\CommentFormType;
 use App\Repository\CommentRepository;
 use App\Repository\ConferenceRepository;
-use App\SpamChecker;
+use App\Services\SpamChecker;
 
 class ConferenceController extends AbstractController
 {
 
     private $twig;
     private $entityManager;
+    private $spamChecker;
 
-    public function __construct(Environment $twig, EntityManagerInterface $entityManager)
+    public function __construct(
+        Environment $twig, EntityManagerInterface $entityManager, SpamChecker $spamChecker)
     {
         $this->twig = $twig;
         $this->entityManager = $entityManager;
+        $this->spamChecker = $spamChecker;
     }
 
     /**
@@ -48,7 +51,7 @@ class ConferenceController extends AbstractController
     /**
      * @Route("/conference/{slug}", name="conference")
      */
-    public function show(Request $request, Conference $conf, CommentRepository $commRep, SpamChecker $spamChecker) 
+    public function show(Request $request, Conference $conf, CommentRepository $commRep)
     {
 
         $comment = new Comment();
