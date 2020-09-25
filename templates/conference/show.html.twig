@@ -3,11 +3,11 @@
 {% block title %}Conference Guestbook - {{ conference }}{% endblock %}
 
 {% block body %}
-    <h1>{{ conference }} Conference</h1>
+    <h2>{{ conference }} Conference</h2>
 
     {% if comments|length > 0 %}
 
-        <h2>Feedback</h2>
+        <h3>Feedback</h3>
         <p>There are {{ comments|length }} comments.</p>
 
         {% for comment in comments %}
@@ -15,10 +15,10 @@
                 <img src="{{ vich_uploader_asset(comment) }}" />
             {% endif %}
 
-            <h3>{{ comment.author }}</h3>
-            <!-- <small> -->
+            <h4>{{ comment.author }}</h4>
+            <small>
                 {{ comment.createdAt|format_datetime() }}
-            <!-- </small> -->
+            </small>
 
             <p>{{ comment.text }}</p>
         {% endfor %}
@@ -33,7 +33,7 @@
         <p>No comments have been posted yet for this conference.</p>
     {% endif %}
 
-    <h2>Add your own feedback</h2>
+    <h3>Add your own feedback</h3>
 
     {{ form(comment_form) }}
 
