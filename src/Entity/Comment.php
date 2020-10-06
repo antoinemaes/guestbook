@@ -68,9 +68,9 @@ class Comment
     private $updatedAt;
 
     /**
-     * @ORM\Column(type="string", length=255, options={"default": "published"})
+     * @ORM\Column(type="string", length=255, options={"default": "submitted"})
      */
-    private $state = 'published';
+    private $state = 'submitted';
 
     public function getId(): ?int
     {
