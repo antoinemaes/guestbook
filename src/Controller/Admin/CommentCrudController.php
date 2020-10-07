@@ -46,6 +46,7 @@ class CommentCrudController extends AbstractCrudController
             ->add('email')
             ->add('createdAt')
             ->add('conference')
+            ->add('state')
         ;
     }
 
