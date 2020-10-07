@@ -185,8 +185,14 @@
     "php": {
         "version": "7.4"
     },
+    "php-amqplib/php-amqplib": {
+        "version": "v2.12.1"
+    },
     "php-webdriver/webdriver": {
         "version": "1.8.2"
+    },
+    "phpseclib/phpseclib": {
+        "version": "2.0.29"
     },
     "platformsh/config-reader": {
         "version": "2.3.1"
