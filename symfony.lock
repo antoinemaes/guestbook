@@ -185,14 +185,17 @@
     "php": {
         "version": "7.4"
     },
-    "php-amqplib/php-amqplib": {
-        "version": "v2.12.1"
-    },
     "php-webdriver/webdriver": {
         "version": "1.8.2"
     },
-    "phpseclib/phpseclib": {
-        "version": "2.0.29"
+    "phpdocumentor/reflection-common": {
+        "version": "2.2.0"
+    },
+    "phpdocumentor/reflection-docblock": {
+        "version": "5.2.2"
+    },
+    "phpdocumentor/type-resolver": {
+        "version": "1.4.0"
     },
     "platformsh/config-reader": {
         "version": "2.3.1"
@@ -235,6 +238,9 @@
         "files": [
             "config/packages/sensio_framework_extra.yaml"
         ]
+    },
+    "symfony/amqp-pack": {
+        "version": "v1.0.12"
     },
     "symfony/apache-pack": {
         "version": "1.0",
@@ -458,6 +464,9 @@
     "symfony/property-access": {
         "version": "v5.0.11"
     },
+    "symfony/property-info": {
+        "version": "v5.0.11"
+    },
     "symfony/routing": {
         "version": "4.2",
         "recipe": {
@@ -495,6 +504,12 @@
     },
     "symfony/security-http": {
         "version": "v5.0.11"
+    },
+    "symfony/serializer": {
+        "version": "v5.0.11"
+    },
+    "symfony/serializer-pack": {
+        "version": "v1.0.3"
     },
     "symfony/service-contracts": {
         "version": "v2.2.0"
@@ -606,5 +621,8 @@
     },
     "webimpress/safe-writer": {
         "version": "2.1.0"
+    },
+    "webmozart/assert": {
+        "version": "1.9.1"
     }
 }
