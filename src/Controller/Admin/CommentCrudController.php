@@ -34,8 +34,12 @@ class CommentCrudController extends AbstractCrudController
             AssociationField::new('conference'),
             ChoiceField::new('state')->setChoices(
                 ['Submitted' => 'submitted', 
+                'Ham' => 'ham',
+                'Potential spam' => 'potential_spam',
+                'Rejected' => 'rejected',
                 'Spam' => 'spam', 
-                'Published' => 'published'])
+                'Published' => 'published',
+                ])
         ];
     }
 
