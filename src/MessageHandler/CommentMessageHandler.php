@@ -5,6 +5,8 @@ namespace App\MessageHandler;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Bridge\Twig\Mime\NotificationEmail;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Workflow\Registry;
@@ -21,6 +23,8 @@ class CommentMessageHandler implements MessageHandlerInterface
     private $commentRepository;
     private $bus;
     private $workflowRegistry;
+    private $mailer;
+    private $adminEmail;
     private $logger;
 
     public function __construct(
@@ -29,18 +33,21 @@ class CommentMessageHandler implements MessageHandlerInterface
         CommentRepository $commentRepository,
         MessageBusInterface $bus,
         Registry $workflowRegistry,
-        LoggerInterface $logger)
+        MailerInterface $mailer,
+        string $adminEmail,
+        LoggerInterface $logger = null)
     {
         $this->entityManager = $entityManager;
         $this->spamChecker = $spamChecker;
         $this->commentRepository = $commentRepository;
         $this->bus = $bus;
         $this->workflowRegistry = $workflowRegistry;
+        $this->mailer = $mailer;
+        $this->adminEmail = $adminEmail;
         $this->logger = $logger;
     }
 
     public function __invoke(CommentMessage $message)
-    
     {
         
         $comment = $this->commentRepository->find($message->getId());
@@ -66,9 +73,13 @@ class CommentMessageHandler implements MessageHandlerInterface
         } elseif ($workflow->can($comment, 'publish') 
             || $workflow->can($comment, 'publish_ham')) {
         
-            $workflow->apply($comment, 
-                $workflow->can($comment, 'publish') ? 'publish' : 'publish_ham');
-            $this->entityManager->flush();
+            $this->mailer->send(
+                (new NotificationEmail())
+                    ->subject('New comment posted')
+                    ->htmlTemplate('emails/comment_notification.html.twig')
+                    ->from($this->adminEmail)
+                    ->to($this->adminEmail)
+                    ->context(['comment' => $comment]));
 
         } elseif ($this->logger) {
 
