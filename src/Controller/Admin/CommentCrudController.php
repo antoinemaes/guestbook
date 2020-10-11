@@ -17,12 +17,19 @@ use App\Entity\Comment;
 
 class CommentCrudController extends AbstractCrudController
 {
+
+    private $photoBase;
+
     public static function getEntityFqcn(): string
     {
         return Comment::class;
     }
 
-    
+    public function __construct(string $photoBase)
+    {
+        $this->photoBase = $photoBase;
+    }
+   
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -30,7 +37,7 @@ class CommentCrudController extends AbstractCrudController
             TextareaField::new('text'),
             TextField::new('email'),
             DateTimeField::new('createdAt')->hideOnForm(),
-            ImageField::new('photoFilename')->setBasePath(getenv('PHOTO_BASE')),
+            ImageField::new('photoFilename')->setBasePath($this->photoBase),
             AssociationField::new('conference'),
             ChoiceField::new('state')->setChoices(
                 ['Submitted' => 'submitted', 
