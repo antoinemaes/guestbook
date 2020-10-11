@@ -45,7 +45,8 @@ class CommentCrudController extends AbstractCrudController
                 'Potential spam' => 'potential_spam',
                 'Rejected' => 'rejected',
                 'Spam' => 'spam', 
-                'Published' => 'published',
+                'Ready' => 'ready',
+                'Published' => 'published'
                 ])
         ];
     }

@@ -13,6 +13,7 @@ use Symfony\Component\Workflow\Registry;
 
 use App\Message\CommentMessage;
 use App\Repository\CommentRepository;
+use App\Service\ImageResizer;
 use App\Service\SpamChecker;
 
 
@@ -26,6 +27,7 @@ class CommentMessageHandler implements MessageHandlerInterface
     private $mailer;
     private $adminEmail;
     private $logger;
+    private $resizer;
 
     public function __construct(
         EntityManagerInterface $entityManager, 
@@ -35,6 +37,7 @@ class CommentMessageHandler implements MessageHandlerInterface
         Registry $workflowRegistry,
         MailerInterface $mailer,
         string $adminEmail,
+        ImageResizer $resizer,
         LoggerInterface $logger = null)
     {
         $this->entityManager = $entityManager;
@@ -44,6 +47,7 @@ class CommentMessageHandler implements MessageHandlerInterface
         $this->workflowRegistry = $workflowRegistry;
         $this->mailer = $mailer;
         $this->adminEmail = $adminEmail;
+        $this->resizer = $resizer;
         $this->logger = $logger;
     }
 
@@ -80,6 +84,15 @@ class CommentMessageHandler implements MessageHandlerInterface
                     ->from($this->adminEmail)
                     ->to($this->adminEmail)
                     ->context(['comment' => $comment]));
+
+        } elseif ($workflow->can($comment, 'optimize')) {
+
+            if($photo = $comment->getPhotofileName())
+                $this->resizer->resize($photo);
+
+            $workflow->apply($comment, 'optimize');
+            $this->entityManager->flush();
+            $this->bus->dispatch($message);
 
         } elseif ($this->logger) {
 
