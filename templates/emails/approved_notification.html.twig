@@ -1,0 +1,12 @@
+{% extends '@email/default/notification/body.html.twig' %}
+
+{% block content %}
+    <p>
+        Hello {{ comment.author }}, your comment for {{ comment.conference }} 
+        Conference has now been approved and will be visible 
+        <a href="{{ url('conference', { slug: comment.conference.slug }) }}">here</a>.
+    </p>
+    <p>
+        Thanks for the feedback !
+    </p>
+{% endblock %}

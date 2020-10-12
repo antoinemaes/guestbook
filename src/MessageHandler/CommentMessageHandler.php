@@ -5,13 +5,16 @@ namespace App\MessageHandler;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\Twig\Mime\NotificationEmail;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Notifier\Notification\Notification;
+use Symfony\Component\Notifier\NotifierInterface;
+use Symfony\Component\Notifier\Recipient\Recipient;
 use Symfony\Component\Workflow\Registry;
 
 use App\Message\CommentMessage;
+use App\Notification\CommentApprovedNotification;
+use App\Notification\CommentReviewNotification;
 use App\Repository\CommentRepository;
 use App\Service\ImageResizer;
 use App\Service\SpamChecker;
@@ -24,10 +27,10 @@ class CommentMessageHandler implements MessageHandlerInterface
     private $commentRepository;
     private $bus;
     private $workflowRegistry;
-    private $mailer;
-    private $adminEmail;
-    private $logger;
+    private $notifier;
     private $resizer;
+    private $logger;
+
 
     public function __construct(
         EntityManagerInterface $entityManager, 
@@ -35,8 +38,7 @@ class CommentMessageHandler implements MessageHandlerInterface
         CommentRepository $commentRepository,
         MessageBusInterface $bus,
         Registry $workflowRegistry,
-        MailerInterface $mailer,
-        string $adminEmail,
+        NotifierInterface $notifier,
         ImageResizer $resizer,
         LoggerInterface $logger = null)
     {
@@ -45,15 +47,13 @@ class CommentMessageHandler implements MessageHandlerInterface
         $this->commentRepository = $commentRepository;
         $this->bus = $bus;
         $this->workflowRegistry = $workflowRegistry;
-        $this->mailer = $mailer;
-        $this->adminEmail = $adminEmail;
+        $this->notifier = $notifier;
         $this->resizer = $resizer;
         $this->logger = $logger;
     }
 
     public function __invoke(CommentMessage $message)
     {
-        
         $comment = $this->commentRepository->find($message->getId());
         if (!$comment) {
             return;
@@ -77,13 +77,9 @@ class CommentMessageHandler implements MessageHandlerInterface
         } elseif ($workflow->can($comment, 'publish') 
             || $workflow->can($comment, 'publish_ham')) {
         
-            $this->mailer->send(
-                (new NotificationEmail())
-                    ->subject('New comment posted')
-                    ->htmlTemplate('emails/comment_notification.html.twig')
-                    ->from($this->adminEmail)
-                    ->to($this->adminEmail)
-                    ->context(['comment' => $comment]));
+            $this->notifier->send(
+                new CommentReviewNotification($comment),
+                ...$this->notifier->getAdminRecipients());
 
         } elseif ($workflow->can($comment, 'optimize')) {
 
@@ -93,6 +89,10 @@ class CommentMessageHandler implements MessageHandlerInterface
             $workflow->apply($comment, 'optimize');
             $this->entityManager->flush();
             $this->bus->dispatch($message);
+
+            $this->notifier->send(
+                new CommentApprovedNotification($comment), 
+                new Recipient($comment->getEmail()));
 
         } elseif ($this->logger) {
 

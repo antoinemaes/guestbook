@@ -47,7 +47,7 @@ class Comment
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Conference::class, inversedBy="comments")
+     * @ORM\ManyToOne(targetEntity=Conference::class, inversedBy="comments", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
     private $conference;

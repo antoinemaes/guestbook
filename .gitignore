@@ -20,6 +20,7 @@
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 
+/startup.sh
 /tests.sh
 
 ###> symfony/webpack-encore-bundle ###

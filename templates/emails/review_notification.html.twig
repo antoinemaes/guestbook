@@ -1,6 +1,7 @@
 {% extends '@email/default/notification/body.html.twig' %}
 
 {% block content %}
+    Conference: {{ comment.conference }}<br />
     Author: {{ comment.author }}<br />
     Email: {{ comment.email }}<br />
     State: {{ comment.state }}<br />

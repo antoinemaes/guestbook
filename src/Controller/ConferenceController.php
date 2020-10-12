@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Notifier\Notification\Notification;
+use Symfony\Component\Notifier\NotifierInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
 
@@ -27,13 +29,18 @@ class ConferenceController extends AbstractController
     private $twig;
     private $entityManager;
     private $bus;
+    private $notifier;
 
     public function __construct(
-        Environment $twig, EntityManagerInterface $entityManager, MessageBusInterface $bus)
+        Environment $twig, 
+        EntityManagerInterface $entityManager, 
+        MessageBusInterface $bus,
+        NotifierInterface $notifier)
     {
         $this->twig = $twig;
         $this->entityManager = $entityManager;
         $this->bus = $bus;
+        $this->notifier = $notifier;
     }
 
     /**
@@ -82,9 +89,20 @@ class ConferenceController extends AbstractController
                 'referrer' => $request->headers->get('referer'),
                 'permalink' => $request->getUri(),
             ];
-            $this->bus->dispatch(new CommentMessage($comment->getId(), $context));
 
-            return $this->redirectToRoute('conference', ['slug' => $conf->getSlug()]);
+            $this->bus->dispatch(new CommentMessage($comment->getId(), $context));
+            $this->notifier->send(new Notification(
+                'Thank you for your feedback, your comment will be posted after moderation.', 
+                ['browser']));
+
+                return $this->redirectToRoute('conference', ['slug' => $conf->getSlug()]);
+        }
+
+        if($form->isSubmitted()) {
+            $this->notifier->send(new Notification(
+                'Can you check your submission ? There are some problems with it.',
+                ['browser']
+            ));
         }
 
         $offset = max(0, $request->query->getInt('offset', 0));
