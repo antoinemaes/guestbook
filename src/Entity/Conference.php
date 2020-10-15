@@ -3,14 +3,13 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Repository\ConferenceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\String\Slugger\SluggerInterface;
-
-use App\Repository\ConferenceRepository;
 
 
 /**
@@ -139,9 +138,9 @@ class Conference
         return $this;
     }
 
-    public function __toString() 
+    public function __toString()
     {
-        return $this->city.' '.$this->year;
+        return $this->city . ' ' . $this->year;
     }
 
     public function getSlug(): ?string
@@ -158,9 +157,8 @@ class Conference
 
     public function computeSlug(SluggerInterface $slugger)
     {
-        if(!$this->slug or $this->slug === '-')
-        {
-            $this->slug = (string) $slugger->slug((string) $this)->lower();
+        if (!$this->slug or $this->slug === '-') {
+            $this->slug = (string)$slugger->slug((string)$this)->lower();
         }
     }
 

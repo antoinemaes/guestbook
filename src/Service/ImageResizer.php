@@ -25,7 +25,7 @@ class ImageResizer
     {
         $stream = $this->storage->readStream($filename);
         $photo = $this->imagine->read($stream);
-        
+
         $size = $photo->getSize();
         $ratio = $size->getWidth() / $size->getHeight();
 
@@ -37,7 +37,7 @@ class ImageResizer
             $height = $width / $ratio;
         }
 
-        $this->storage->put($filename, 
+        $this->storage->put($filename,
             $photo->resize(new Box($width, $height))
                 ->get(pathinfo($filename, \PATHINFO_EXTENSION)));
     }

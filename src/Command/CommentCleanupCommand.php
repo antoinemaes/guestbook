@@ -2,20 +2,18 @@
 
 namespace App\Command;
 
+use App\Repository\CommentRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-use App\Repository\CommentRepository;
-
 
 class CommentCleanupCommand extends Command
 {
-    private $commentRepository;
-
     protected static $defaultName = 'app:comment:cleanup';
+    private $commentRepository;
 
     public function __construct(CommentRepository $commentRepository)
     {
@@ -28,8 +26,7 @@ class CommentCleanupCommand extends Command
     {
         $this
             ->setDescription('Deletes rejected and spam comments from the database')
-            ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Dry run')
-        ;
+            ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Dry run');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

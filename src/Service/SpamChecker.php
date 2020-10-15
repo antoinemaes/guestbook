@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Comment;
+use RuntimeException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SpamChecker
@@ -19,7 +20,7 @@ class SpamChecker
     /**
      * @return int Spam score: 0: not spam, 1: maybe spam, 2: blatant spam
      *
-     * @throws \RuntimeException if the call did not work
+     * @throws RuntimeException if the call did not work
      */
     public function getSpamScore(Comment $comment, array $context): int
     {
@@ -44,7 +45,7 @@ class SpamChecker
 
         $content = $response->getContent();
         if (isset($headers['x-akismet-debug-help'][0])) {
-            throw new \RuntimeException(sprintf('Unable to check for spam: %s (%s).', $content, $headers['x-akismet-debug-help'][0]));
+            throw new RuntimeException(sprintf('Unable to check for spam: %s (%s).', $content, $headers['x-akismet-debug-help'][0]));
         }
 
         return 'true' === $content ? 1 : 0;

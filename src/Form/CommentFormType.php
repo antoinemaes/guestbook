@@ -21,8 +21,7 @@ class CommentFormType extends AbstractType
             ->add('text')
             ->add('email', EmailType::Class)
             ->add('photoFile', VichImageType::class, ['required' => false])
-            ->add('submit', SubmitType::Class)
-        ;
+            ->add('submit', SubmitType::Class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
