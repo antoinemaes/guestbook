@@ -3,6 +3,8 @@ welcome: "Bienvenue !"
 page.top: "Haut de page"
 feedback: "Votre avis est le bienvenu !"
 view: "Sélectionner"
+previous: "Précédent"
+next: "Suivant"
 conference:
   title: "Conférence de {conference}"
 comments:
