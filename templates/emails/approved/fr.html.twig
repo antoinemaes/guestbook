@@ -1,0 +1,16 @@
+{% extends '@email/default/notification/body.html.twig' %}
+
+{% block content %}
+    <p>
+        Bonjour {{ comment.author }}, votre commentaire pour la conférence de
+        {{ comment.conference }} a été approuvé et est maintenant visible
+        <a href=
+        "{{ url('conference',
+            { _locale: 'fr', slug: comment.conference.slug }) }}">
+            ici
+        </a>.
+    </p>
+    <p>
+        Merci pour le retour !
+    </p>
+{% endblock %}

@@ -33,8 +33,8 @@ class CommentMessageHandler implements MessageHandlerInterface
 
 
     public function __construct(
-        EntityManagerInterface $entityManager, 
-        SpamChecker $spamChecker, 
+        EntityManagerInterface $entityManager,
+        SpamChecker $spamChecker,
         CommentRepository $commentRepository,
         MessageBusInterface $bus,
         Registry $workflowRegistry,
@@ -61,7 +61,7 @@ class CommentMessageHandler implements MessageHandlerInterface
         $workflow = $this->workflowRegistry->get($comment);
 
         if ($workflow->can($comment, 'accept')) {
-            
+
             $score = $this->spamChecker->getSpamScore($comment, $message->getContext());
 
             switch($score) {
@@ -74,9 +74,9 @@ class CommentMessageHandler implements MessageHandlerInterface
             $this->entityManager->flush();
             $this->bus->dispatch($message);
 
-        } elseif ($workflow->can($comment, 'publish') 
+        } elseif ($workflow->can($comment, 'publish')
             || $workflow->can($comment, 'publish_ham')) {
-        
+
             $this->notifier->send(
                 new CommentReviewNotification($comment),
                 ...$this->notifier->getAdminRecipients());
@@ -96,9 +96,9 @@ class CommentMessageHandler implements MessageHandlerInterface
 
         } elseif ($this->logger) {
 
-            $this->logger->debug('Dropping comment message', 
+            $this->logger->debug('Dropping comment message',
                 ['comment' => $comment->getId(), 'state' => $comment->getState()]);
-       
+
         }
     }
 }

@@ -12,12 +12,10 @@ use App\Entity\Comment;
 class CommentApprovedNotification extends Notification implements EmailNotificationInterface
 {
     private $comment;
-    private $locale;
 
-    public function __construct(Comment $comment, string $locale = 'en')
+    public function __construct(Comment $comment)
     {
         $this->comment = $comment;
-        $this->locale = $locale;
 
         parent::__construct($comment->getConference().' : comment approved.');
         $this->importance(Notification::IMPORTANCE_MEDIUM);
@@ -26,9 +24,19 @@ class CommentApprovedNotification extends Notification implements EmailNotificat
     public function asEmailMessage(Recipient $recipient, string $transport = null): ?EmailMessage
     {
         $message = EmailMessage::fromNotification($this, $recipient, $transport);
+        switch($this->comment->getUserLocale())
+        {
+            case 'fr':
+                $template = 'emails/approved/fr.html.twig';
+                break;
+            case 'en':
+            default:
+                $template = 'emails/approved/en.html.twig';
+                break;
+        }
         $message->getMessage()
-            ->htmlTemplate('emails/approved_notification.html.twig')
-            ->context(['comment' => $this->comment, 'user_locale' => $this->locale])
+            ->htmlTemplate($template)
+            ->context(['comment' => $this->comment])
         ;
 
         return $message;

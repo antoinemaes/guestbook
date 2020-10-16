@@ -90,6 +90,7 @@ class ConferenceController extends AbstractController
         if($form->isSubmitted() and $form->isValid()) {
 
             $comment->setConference($conf);
+            $comment->setUserLocale($request->getLocale());
             $this->entityManager->persist($comment);
             $this->entityManager->flush();
 

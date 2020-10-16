@@ -93,6 +93,11 @@ class Comment
      */
     private $state = 'submitted';
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $userLocale;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -237,6 +242,18 @@ class Comment
     public function setState(string $state): self
     {
         $this->state = $state;
+
+        return $this;
+    }
+
+    public function getUserLocale(): ?string
+    {
+        return $this->userLocale;
+    }
+
+    public function setUserLocale(?string $userLocale): self
+    {
+        $this->userLocale = $userLocale;
 
         return $this;
     }
