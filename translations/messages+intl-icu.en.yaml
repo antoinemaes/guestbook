@@ -1,0 +1,34 @@
+title: "Conference Guestbook"
+welcome: "Welcome!"
+page.top: "Back to top"
+feedback: "Give your feedback!"
+view: "View"
+conference:
+  title: "{conference} Conference"
+comments:
+  no: "No comments have been posted yet for this conference."
+  number: >-
+    {count, plural,
+        one   {There is one comment.}
+        other {There are # comments.}
+    }
+  add: "Add your own feedback"
+  form:
+    name: "Your name"
+    text: "Text"
+    email: "Email"
+    photo: "Photo"
+    submit: "Submit"
+admin:
+  conference: "Conference:"
+  author: "Author:"
+  email: "Email:"
+  state: "State:"
+  accept: "Accept"
+  reject: "Reject"
+  review: "Comment reviewed, thank you!"
+  transition: "Applied transition:"
+  state.new: "New state:"
+notification:
+  submitted: "Thank you for your feedback, your comment will be posted after moderation."
+  error: "Can you check your submission ? There are some problems with it."

@@ -1,0 +1,34 @@
+title: "Livre d'or de conférences"
+welcome: "Bienvenue !"
+page.top: "Haut de page"
+feedback: "Votre avis est le bienvenu !"
+view: "Sélectionner"
+conference:
+  title: "Conférence de {conference}"
+comments:
+  no: "Il n'y a pas encore de commentaire pour cette conférence."
+  number: >-
+    {count, plural,
+        one   {Il y a un commentaire.}
+        other {Il y a # commentaires.}
+    }
+  add: "Ajouter un commentaire"
+  form:
+    name: "Votre nom"
+    text: "Texte"
+    email: "Email"
+    photo: "Photo"
+    submit: "Envoyer"
+admin:
+  conference: "Conférence :"
+  author: "Auteur :"
+  email: "Email :"
+  state: "Etat :"
+  accept: "Accepter"
+  reject: "Rejeter"
+  review: "Commentaire évalué, merci !"
+  transition: "Transition appliquée :"
+  state.new: "Nouvel état :"
+notification:
+  submitted: "Merci pour votre retour, votre commentaire sera visible après modération."
+  error: "Pouvez-vous vérifier votre soumission ? Il semble y avoir un problème."

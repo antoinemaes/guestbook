@@ -2,9 +2,13 @@
 
 {% block content %}
     <p>
-        Hello {{ comment.author }}, your comment for {{ comment.conference }} 
-        Conference has now been approved and will be visible 
-        <a href="{{ url('conference', { slug: comment.conference.slug }) }}">here</a>.
+        Hello {{ comment.author }}, your comment for {{ comment.conference }}
+        Conference has now been approved and will be visible
+        <a href=
+            "{{ url('conference',
+                { _locale: user_locale, slug: comment.conference.slug }) }}">
+            here
+        </a>.
     </p>
     <p>
         Thanks for the feedback !

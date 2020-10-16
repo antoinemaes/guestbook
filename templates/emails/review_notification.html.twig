@@ -1,10 +1,10 @@
 {% extends '@email/default/notification/body.html.twig' %}
 
 {% block content %}
-    Conference: {{ comment.conference }}<br />
-    Author: {{ comment.author }}<br />
-    Email: {{ comment.email }}<br />
-    State: {{ comment.state }}<br />
+    {{ 'admin.conference'|trans }} {{ comment.conference }}<br />
+    {{ 'admin.author'|trans }} {{ comment.author }}<br />
+    {{ 'admin.email'|trans }} {{ comment.email }}<br />
+    {{ 'admin.state'|trans }} {{ comment.state }}<br />
 
     <p>
         {{ comment.text }}
@@ -13,6 +13,10 @@
 
 {% block action %}
     <spacer size="16"></spacer>
-    <button href="{{ url('review_comment', { id: comment.id }) }}">Accept</button>
-    <button href="{{ url('review_comment', { id: comment.id, reject: true }) }}">Reject</button>
+    <button href="{{ url('review_comment', { id: comment.id }) }}">
+      {{ 'admin.accept'|trans }}
+    </button>
+    <button href="{{ url('review_comment', { id: comment.id, reject: true }) }}">
+      {{ 'admin.reject'|trans }}
+    </button>
 {% endblock %}

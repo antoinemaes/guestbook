@@ -13,9 +13,9 @@ use App\Entity\Conference;
 use App\Entity\Comment;
 
 class DashboardController extends AbstractDashboardController
-{
+{  
     /**
-     * @Route("/admin", name="admin")
+     * @Route("/{_locale<%app.supported_locales%>}/admin", name="admin")
      */
     public function index(): Response
     {

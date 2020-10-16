@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -20,6 +21,7 @@ use App\Message\CommentMessage;
 use App\Repository\CommentRepository;
 use App\Repository\ConferenceRepository;
 
+
 class ConferenceController extends AbstractController
 {
 
@@ -27,17 +29,20 @@ class ConferenceController extends AbstractController
     private $entityManager;
     private $bus;
     private $notifier;
+    private $translator;
 
     public function __construct(
-        Environment $twig, 
-        EntityManagerInterface $entityManager, 
+        Environment $twig,
+        EntityManagerInterface $entityManager,
         MessageBusInterface $bus,
-        NotifierInterface $notifier)
+        NotifierInterface $notifier,
+        TranslatorInterface $translator)
     {
         $this->twig = $twig;
         $this->entityManager = $entityManager;
         $this->bus = $bus;
         $this->notifier = $notifier;
+        $this->translator = $translator;
     }
 
     /**
@@ -55,7 +60,7 @@ class ConferenceController extends AbstractController
     {
         return new Response(
             $this->twig->render(
-                'conference/index.html.twig', 
+                'conference/index.html.twig',
                 ['conferences' => $confRep->findAll()]
             )
         );
@@ -83,7 +88,7 @@ class ConferenceController extends AbstractController
 
         $form->handleRequest($request);
         if($form->isSubmitted() and $form->isValid()) {
-        
+
             $comment->setConference($conf);
             $this->entityManager->persist($comment);
             $this->entityManager->flush();
@@ -96,8 +101,9 @@ class ConferenceController extends AbstractController
             ];
 
             $this->bus->dispatch(new CommentMessage($comment->getId(), $context));
+
             $this->notifier->send(new Notification(
-                'Thank you for your feedback, your comment will be posted after moderation.', 
+                $this->translator->trans('notification.submitted'),
                 ['browser']));
 
                 return $this->redirectToRoute('conference', ['slug' => $conf->getSlug()]);
@@ -105,7 +111,7 @@ class ConferenceController extends AbstractController
 
         if($form->isSubmitted()) {
             $this->notifier->send(new Notification(
-                'Can you check your submission ? There are some problems with it.',
+                $this->translator->trans('notification.error'),
                 ['browser']
             ));
         }

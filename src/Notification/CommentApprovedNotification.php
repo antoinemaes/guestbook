@@ -9,16 +9,17 @@ use Symfony\Component\Notifier\Recipient\Recipient;
 
 use App\Entity\Comment;
 
-
 class CommentApprovedNotification extends Notification implements EmailNotificationInterface
 {
     private $comment;
+    private $locale;
 
-    public function __construct(Comment $comment)
+    public function __construct(Comment $comment, string $locale = 'en')
     {
-        parent::__construct($comment->getConference().' : comment approved.');
-
         $this->comment = $comment;
+        $this->locale = $locale;
+
+        parent::__construct($comment->getConference().' : comment approved.');
         $this->importance(Notification::IMPORTANCE_MEDIUM);
     }
 
@@ -27,7 +28,7 @@ class CommentApprovedNotification extends Notification implements EmailNotificat
         $message = EmailMessage::fromNotification($this, $recipient, $transport);
         $message->getMessage()
             ->htmlTemplate('emails/approved_notification.html.twig')
-            ->context(['comment' => $this->comment])
+            ->context(['comment' => $this->comment, 'user_locale' => $this->locale])
         ;
 
         return $message;

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Conference Guestbook - {{ conference }}{% endblock %}
+{% block title %}{{ 'title'|trans }} - {{ conference }}{% endblock %}
 
 {% block body %}
 
@@ -14,7 +14,7 @@
     {% endfor %}
 
     <h2 class="mb-5">
-        {{ conference }} Conference
+        {{ 'conference.title'|trans( {'conference': conference } ) }}
     </h2>
 
     <div class="row">
@@ -47,23 +47,23 @@
                         </div>
                     </div>
                 {% endfor %}
-                <div>There are {{ comments|length }} comments.</div>
+                <div>{{ 'comments.number'|trans({'count': comments|length}) }}</div>
                 {% if previous >= 0 %}
-                    <a href="{{ path('conference', { slug: conference.slug, offset: previous }) }}">Previous</a>
+                    <a href="{{ path('conference', { slug: conference.slug, offset: previous }) }}">{{ 'previous'|trans }}</a>
                 {% endif %}
                 {% if next < comments|length %}
-                    <a href="{{ path('conference', { slug: conference.slug, offset: next }) }}">Next</a>
+                    <a href="{{ path('conference', { slug: conference.slug, offset: next }) }}">{{ 'next'|trans }}</a>
                 {% endif %}
             {% else %}
                 <div class="text-center">
-                    No comments have been posted yet for this conference.
+                    {{ 'comments.no'|trans }}
                 </div>
             {% endif %}
         </div>
         <div class="col-12 col-lg-4">
             <div class="bg-light shadow border rounded-lg p-4">
                 <h3 class="font-weight-light">
-                    Add your own feedback
+                    {{ 'comments.add'|trans }}
                 </h3>
 
                 {{ form(comment_form) }}
